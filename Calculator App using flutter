@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(CalculatorApp());
+}
+
+class CalculatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Calculator(),
+    );
+  }
+}
+
+class Calculator extends StatefulWidget {
+  @override
+  _CalculatorState createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
+  String _output = '0';
+  String _currentInput = '';
+  double _num1;
+  String _operator;
+
+  void _buttonPressed(String buttonText) {
+    if (buttonText == 'C') {
+      _clear();
+    } else if (buttonText == '+' || buttonText == '-' || buttonText == '*' || buttonText == '/') {
+      _operatorPressed(buttonText);
+    } else if (buttonText == '=') {
+      _equalsPressed();
+    } else {
+      _numberPressed(buttonText);
+    }
+  }
+
+  void _clear() {
+    setState(() {
+      _output = '0';
+      _currentInput = '';
+      _num1 = null;
+      _operator = null;
+    });
+  }
+
+  void _numberPressed(String buttonText) {
+    setState(() {
+      if (_currentInput == '0') {
+        _currentInput = buttonText;
+      } else {
+        _currentInput += buttonText;
+      }
+      _output = _currentInput;
+    });
+  }
+
+  void _operatorPressed(String buttonText) {
+    setState(() {
+      _num1 = double.parse(_currentInput);
+      _currentInput = '';
+      _operator = buttonText;
+    });
+  }
+
+  void _equalsPressed() {
+    setState(() {
+      double num2 = double.parse(_currentInput);
+      double result;
+      if (_operator == '+') {
+        result = _num1 + num2;
+      } else if (_operator == '-') {
+        result = _num1 - num2;
+      } else if (_operator == '*') {
+        result = _num1 * num2;
+      } else if (_operator == '/') {
+        result = _num1 / num2;
+      }
+      _output = result.toString();
+      _currentInput = '';
+      _num1 = null;
+      _operator = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculator'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+            child: Text(
+              _output,
+              style: TextStyle(fontSize: 48),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                String buttonText;
+                if (index < 10) {
+                  buttonText = index.toString();
+                } else if (index == 10) {
+                  buttonText = 'C';
+                } else if (index == 11) {
+                  buttonText = '0';
+                } else if (index == 12) {
+                  buttonText = '+';
+                } else if (index == 13) {
+                  buttonText = '-';
+                } else if (index == 14) {
+                  buttonText = '*';
+                } else if (index == 15) {
+                  buttonText = '/';
+                } else if (index == 16) {
+                  buttonText = '=';
+                }
+                return GestureDetector(
+                  onTap: () {
+                    _buttonPressed(buttonText);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Text(
+                      buttonText,
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
