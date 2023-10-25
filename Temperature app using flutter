@@ -1,0 +1,25 @@
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class TemperatureConverterActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_temperature_converter)
+
+        val editTextCelsius = findViewById<EditText>(R.id.editTextCelsius)
+        val editTextFahrenheit = findViewById<EditText>(R.id.editTextFahrenheit)
+        val buttonConvert = findViewById<Button>(R.id.buttonConvert)
+
+        buttonConvert.setOnClickListener {
+            val celsius = editTextCelsius.text.toString().toDoubleOrNull()
+            if (celsius != null) {
+                val fahrenheit = (celsius * 9/5) + 32
+                editTextFahrenheit.setText(fahrenheit.toString())
+            }
+        }
+    }
+}
