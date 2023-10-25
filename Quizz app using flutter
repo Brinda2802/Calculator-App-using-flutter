@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(QuizApp());
+}
+
+class QuizApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Quiz App'),
+        ),
+        body: QuizPage(),
+      ),
+    );
+  }
+}
+
+class QuizPage extends StatefulWidget {
+  @override
+  _QuizPageState createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  int currentQuestionIndex = 0;
+  int score = 0;
+
+  List<Map<String, dynamic>> questions = [
+    {
+      'question': 'Who is the founder of Flutter?',
+      'options': ['Google', 'Yahoo', 'Microsoft'],
+      'correctAnswer': 'Google',
+    },
+    // Add more questions here
+  ];
+
+  void checkAnswer(String selectedAnswer) {
+    if (selectedAnswer == questions[currentQuestionIndex]['correctAnswer']) {
+      setState(() {
+        score++;
+      });
+    }
+
+    nextQuestion();
+  }
+
+  void nextQuestion() {
+    if (currentQuestionIndex < questions.length - 1) {
+      setState(() {
+        currentQuestionIndex++;
+      });
+    } else {
+      // Quiz completed, navigate to the result screen or show the result.
+      // You can create a ResultPage for this purpose.
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Text(questions[currentQuestionIndex]['question']),
+          ...questions[currentQuestionIndex]['options'].map((option) {
+            return RaisedButton(
+              child: Text(option),
+              onPressed: () {
+                checkAnswer(option);
+              },
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+}
